@@ -13,10 +13,11 @@
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
     <quarkus.platform.version>2.12.3.Final</quarkus.platform.version>
-    <skipITs>true</skipITs>
+    <skipITs>false</skipITs>
     <surefire-plugin.version>3.0.0-M7</surefire-plugin.version>
     <lombok.version>1.18.24</lombok.version>
     <java.version>11</java.version>
+    <archunit.version>0.23.1</archunit.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -73,6 +74,12 @@
     <dependency>
       <groupId>io.rest-assured</groupId>
       <artifactId>rest-assured</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.tngtech.archunit</groupId>
+      <artifactId>archunit-junit5</artifactId>
+      <version>${archunit.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -133,6 +140,11 @@
       <plugin>
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>${surefire-plugin.version}</version>
+        <configuration>
+          <includes>
+            <include>**/*IT.*</include>
+          </includes>
+        </configuration>
         <executions>
           <execution>
             <goals>
