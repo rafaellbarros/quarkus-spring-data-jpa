@@ -61,15 +61,17 @@ class PessoaRestTest {
         Assertions.assertThat(pessoas.get(0).getId()).isEqualTo(exptectedId);
         Assertions.assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
 
-
     }
 
     @Test
     void inserirTest() {
 
-        final Pessoa pessaoSave = (Pessoa) pessoaRest.inserir(PessoaCreator.createPessoaToBeSaved()).getEntity();
+        final Response response = pessoaRest.inserir(PessoaCreator.createPessoaToBeSaved());
 
-        Assertions.assertThat(pessaoSave).isNotNull().isEqualTo(pessoaMock);
+        final Pessoa pessaoSave = (Pessoa) response.getEntity();
+
+                Assertions.assertThat(pessaoSave).isNotNull().isEqualTo(pessoaMock);
+        Assertions.assertThat(response.getStatus()).isEqualTo(Response.Status.CREATED.getStatusCode());
 
     }
 }
