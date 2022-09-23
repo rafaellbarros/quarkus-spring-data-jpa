@@ -1,8 +1,8 @@
-package br.com.rafaellbarros.rest;
+package br.com.rafaellbarros.service;
 
 import br.com.rafaellbarros.model.entity.Pessoa;
+import br.com.rafaellbarros.repository.PessoaRepository;
 import br.com.rafaellbarros.rest.utils.PessoaCreator;
-import br.com.rafaellbarros.service.PessoaService;
 import io.quarkus.test.junit.QuarkusTest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import javax.ws.rs.core.Response;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -25,13 +24,13 @@ import static java.util.Collections.singletonList;
  */
 
 @QuarkusTest
-class PessoaRestTest {
+class PessoaServiceTest {
 
     @InjectMocks
-    PessoaRest pessoaRest;
+    PessoaService pessoaService;
 
     @Mock
-    PessoaService pessoaServiceMock;
+    PessoaRepository pessoaRepositoryMock;
 
     private final Pessoa pessoaMock = PessoaCreator.createValidPessoa();
 
@@ -39,9 +38,9 @@ class PessoaRestTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        BDDMockito.when(pessoaServiceMock.listarTodas()).thenReturn(singletonList(pessoaMock));
+        BDDMockito.when(pessoaRepositoryMock.findAll()).thenReturn(singletonList(pessoaMock));
 
-        BDDMockito.when(pessoaServiceMock.inserir(ArgumentMatchers.any(Pessoa.class))).thenReturn(pessoaMock);
+        BDDMockito.when(pessoaRepositoryMock.save(ArgumentMatchers.any(Pessoa.class))).thenReturn(pessoaMock);
 
     }
 
@@ -50,8 +49,7 @@ class PessoaRestTest {
     void listarTodasTest() {
 
         final Long exptectedId = PessoaCreator.createValidPessoa().getId();
-        Response response = pessoaRest.listarTodas();
-        List<Pessoa> pessoas = (List<Pessoa>) response.getEntity();
+        final List<Pessoa> pessoas = pessoaService.listarTodas();
 
         Assertions.assertThat(pessoas)
                 .isNotNull()
@@ -59,17 +57,15 @@ class PessoaRestTest {
                 .hasSize(1);
 
         Assertions.assertThat(pessoas.get(0).getId()).isEqualTo(exptectedId);
-        Assertions.assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
-
-
     }
 
     @Test
     void inserirTest() {
 
-        final Pessoa pessaoSave = (Pessoa) pessoaRest.inserir(PessoaCreator.createPessoaToBeSaved()).getEntity();
+        final Pessoa pessaoSave = pessoaService.inserir(PessoaCreator.createPessoaToBeSaved());
 
         Assertions.assertThat(pessaoSave).isNotNull().isEqualTo(pessoaMock);
 
     }
+
 }
