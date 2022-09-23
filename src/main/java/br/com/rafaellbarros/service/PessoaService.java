@@ -5,6 +5,7 @@ import br.com.rafaellbarros.repository.PessoaRepository;
 import lombok.AllArgsConstructor;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -23,6 +24,7 @@ public class PessoaService {
         return pessoaRepository.findAll();
     }
 
+    @Transactional
     public Pessoa inserir(final Pessoa pessoa) {
         return pessoaRepository.save(pessoa);
     }
