@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 
@@ -40,13 +41,15 @@ class PessoaServiceTest {
 
         BDDMockito.when(pessoaRepositoryMock.findAll()).thenReturn(singletonList(pessoaEntityMock));
 
+        BDDMockito.when(pessoaRepositoryMock.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(pessoaEntityMock));
+
         BDDMockito.when(pessoaRepositoryMock.save(ArgumentMatchers.any(PessoaEntity.class))).thenReturn(pessoaEntityMock);
 
     }
 
 
     @Test
-    void listarTodasTest() {
+    void deveObterTodasPessoas() {
 
         final Long exptectedId = PessoaCreator.createValidPessoa().getId();
         final List<PessoaEntity> pessoaEntities = pessoaService.listarTodas();
@@ -60,7 +63,20 @@ class PessoaServiceTest {
     }
 
     @Test
-    void inserirTest() {
+    void deveObterPorId() {
+
+        final Long expectedId = pessoaEntityMock.getId();
+
+        final PessoaEntity pessoaEntity = pessoaService.obterPorId(1L);
+
+        Assertions.assertThat(pessoaEntity).isNotNull();
+
+        Assertions.assertThat(pessoaEntity.getId()).isNotNull().isEqualTo(expectedId);
+
+    }
+
+    @Test
+    void deveIncluirPessoa() {
 
         final PessoaEntity pessaoSave = pessoaService.inserir(PessoaCreator.createPessoaToBeSaved());
 
