@@ -24,6 +24,11 @@ public class PessoaService {
         return pessoaRepository.findAll();
     }
 
+    public PessoaEntity obterPorId(final Long id) {
+        return pessoaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada!"));
+    }
+
     @Transactional
     public PessoaEntity inserir(final PessoaEntity pessoaEntity) {
         return pessoaRepository.save(pessoaEntity);
