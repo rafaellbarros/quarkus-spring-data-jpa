@@ -1,6 +1,6 @@
 package br.com.rafaellbarros.rest;
 
-import br.com.rafaellbarros.model.entity.Pessoa;
+import br.com.rafaellbarros.model.entity.PessoaEntity;
 import br.com.rafaellbarros.rest.utils.PessoaCreator;
 import br.com.rafaellbarros.service.PessoaService;
 import io.quarkus.test.junit.QuarkusTest;
@@ -33,15 +33,15 @@ class PessoaRestTest {
     @Mock
     PessoaService pessoaServiceMock;
 
-    private final Pessoa pessoaMock = PessoaCreator.createValidPessoa();
+    private final PessoaEntity pessoaEntityMock = PessoaCreator.createValidPessoa();
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        BDDMockito.when(pessoaServiceMock.listarTodas()).thenReturn(singletonList(pessoaMock));
+        BDDMockito.when(pessoaServiceMock.listarTodas()).thenReturn(singletonList(pessoaEntityMock));
 
-        BDDMockito.when(pessoaServiceMock.inserir(ArgumentMatchers.any(Pessoa.class))).thenReturn(pessoaMock);
+        BDDMockito.when(pessoaServiceMock.inserir(ArgumentMatchers.any(PessoaEntity.class))).thenReturn(pessoaEntityMock);
 
     }
 
@@ -51,14 +51,14 @@ class PessoaRestTest {
 
         final Long exptectedId = PessoaCreator.createValidPessoa().getId();
         Response response = pessoaRest.listarTodas();
-        List<Pessoa> pessoas = (List<Pessoa>) response.getEntity();
+        List<PessoaEntity> pessoaEntities = (List<PessoaEntity>) response.getEntity();
 
-        Assertions.assertThat(pessoas)
+        Assertions.assertThat(pessoaEntities)
                 .isNotNull()
                 .isNotEmpty()
                 .hasSize(1);
 
-        Assertions.assertThat(pessoas.get(0).getId()).isEqualTo(exptectedId);
+        Assertions.assertThat(pessoaEntities.get(0).getId()).isEqualTo(exptectedId);
         Assertions.assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
 
     }
@@ -68,9 +68,9 @@ class PessoaRestTest {
 
         final Response response = pessoaRest.inserir(PessoaCreator.createPessoaToBeSaved());
 
-        final Pessoa pessaoSave = (Pessoa) response.getEntity();
+        final PessoaEntity pessaoSave = (PessoaEntity) response.getEntity();
 
-                Assertions.assertThat(pessaoSave).isNotNull().isEqualTo(pessoaMock);
+                Assertions.assertThat(pessaoSave).isNotNull().isEqualTo(pessoaEntityMock);
         Assertions.assertThat(response.getStatus()).isEqualTo(Response.Status.CREATED.getStatusCode());
 
     }

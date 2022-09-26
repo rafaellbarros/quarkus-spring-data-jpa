@@ -19,10 +19,10 @@ import javax.persistence.Id;
 @Builder
 @Getter
 @Setter
-//@Entity
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class Pessoa {
+public class PessoaEntity {
 
     @Id
     @GeneratedValue

@@ -1,6 +1,6 @@
 package br.com.rafaellbarros.service;
 
-import br.com.rafaellbarros.model.entity.Pessoa;
+import br.com.rafaellbarros.model.entity.PessoaEntity;
 import br.com.rafaellbarros.repository.PessoaRepository;
 import br.com.rafaellbarros.rest.utils.PessoaCreator;
 import io.quarkus.test.junit.QuarkusTest;
@@ -32,15 +32,15 @@ class PessoaServiceTest {
     @Mock
     PessoaRepository pessoaRepositoryMock;
 
-    private final Pessoa pessoaMock = PessoaCreator.createValidPessoa();
+    private final PessoaEntity pessoaEntityMock = PessoaCreator.createValidPessoa();
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        BDDMockito.when(pessoaRepositoryMock.findAll()).thenReturn(singletonList(pessoaMock));
+        BDDMockito.when(pessoaRepositoryMock.findAll()).thenReturn(singletonList(pessoaEntityMock));
 
-        BDDMockito.when(pessoaRepositoryMock.save(ArgumentMatchers.any(Pessoa.class))).thenReturn(pessoaMock);
+        BDDMockito.when(pessoaRepositoryMock.save(ArgumentMatchers.any(PessoaEntity.class))).thenReturn(pessoaEntityMock);
 
     }
 
@@ -49,22 +49,22 @@ class PessoaServiceTest {
     void listarTodasTest() {
 
         final Long exptectedId = PessoaCreator.createValidPessoa().getId();
-        final List<Pessoa> pessoas = pessoaService.listarTodas();
+        final List<PessoaEntity> pessoaEntities = pessoaService.listarTodas();
 
-        Assertions.assertThat(pessoas)
+        Assertions.assertThat(pessoaEntities)
                 .isNotNull()
                 .isNotEmpty()
                 .hasSize(1);
 
-        Assertions.assertThat(pessoas.get(0).getId()).isEqualTo(exptectedId);
+        Assertions.assertThat(pessoaEntities.get(0).getId()).isEqualTo(exptectedId);
     }
 
     @Test
     void inserirTest() {
 
-        final Pessoa pessaoSave = pessoaService.inserir(PessoaCreator.createPessoaToBeSaved());
+        final PessoaEntity pessaoSave = pessoaService.inserir(PessoaCreator.createPessoaToBeSaved());
 
-        Assertions.assertThat(pessaoSave).isNotNull().isEqualTo(pessoaMock);
+        Assertions.assertThat(pessaoSave).isNotNull().isEqualTo(pessoaEntityMock);
 
     }
 

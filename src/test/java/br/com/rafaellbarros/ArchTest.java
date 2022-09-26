@@ -4,11 +4,9 @@ import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
 import io.quarkus.test.junit.QuarkusTest;
-import lombok.Builder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.Entity;
@@ -127,16 +125,16 @@ public class ArchTest {
 
    /* entitiesMustResideInEntityPackage  */
    // TODO: lançar a versão 2.0 igual do cleanarc
+
+
    @Test
    void entitiesDevemEstarPresenteNoPacoteModelEntity() {
-      classes()
-              .that().areAnnotatedWith("Entity")
-              .should().resideInAPackage("..model.entity..")
+      classes().that().areAnnotatedWith(Entity.class).should().resideInAPackage("..model.entity..")
               .andShould().haveSimpleNameEndingWith("Entity")
               .as("Etities devem estar em um pacote '..model.entity..'")
-              .allowEmptyShould(true)
               .check(importedClasses);
    }
+
 
    /* enumsMustResideInEnumsPackage  */
    /*
@@ -163,7 +161,5 @@ public class ArchTest {
    void interfacesNaoDevemTerNomesQueTerminemComAPalavraInterface() {
       noClasses().that().areInterfaces().should().haveNameMatching(".*Interface").check(importedClasses);
    }
-
-
 
 }

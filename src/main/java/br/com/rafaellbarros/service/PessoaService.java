@@ -1,6 +1,6 @@
 package br.com.rafaellbarros.service;
 
-import br.com.rafaellbarros.model.entity.Pessoa;
+import br.com.rafaellbarros.model.entity.PessoaEntity;
 import br.com.rafaellbarros.repository.PessoaRepository;
 import lombok.AllArgsConstructor;
 
@@ -20,12 +20,12 @@ public class PessoaService {
 
     private final PessoaRepository pessoaRepository;
 
-    public List<Pessoa> listarTodas() {
+    public List<PessoaEntity> listarTodas() {
         return pessoaRepository.findAll();
     }
 
     @Transactional
-    public Pessoa inserir(final Pessoa pessoa) {
-        return pessoaRepository.save(pessoa);
+    public PessoaEntity inserir(final PessoaEntity pessoaEntity) {
+        return pessoaRepository.save(pessoaEntity);
     }
 }

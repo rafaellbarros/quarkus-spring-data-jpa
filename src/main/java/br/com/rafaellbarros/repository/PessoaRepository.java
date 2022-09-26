@@ -1,6 +1,6 @@
 package br.com.rafaellbarros.repository;
 
-import br.com.rafaellbarros.model.entity.Pessoa;
+import br.com.rafaellbarros.model.entity.PessoaEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author rafael barros for DevDusCorre <rafaelbarros.softwareengineer@gmail.com> on 21/09/2022
  */
 
-public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
+public interface PessoaRepository extends JpaRepository<PessoaEntity, Long> {
 }
