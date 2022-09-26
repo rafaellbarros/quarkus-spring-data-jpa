@@ -14,8 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.*;
 
 /**
  * created by:
@@ -31,7 +30,7 @@ class PessoaRestIT {
 
     @Test
     @Order(1)
-    void inserirTest() {
+    void deveIncluirPessoa() {
 
         given()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -43,7 +42,7 @@ class PessoaRestIT {
 
    @Test
    @Order(2)
-   void listarTodasTest() {
+   void deveObterTodasPessoas() {
         given()
                 .when()
                 .get()
@@ -54,4 +53,17 @@ class PessoaRestIT {
                 .body("idade", hasItem(27))
                 .statusCode(Response.Status.OK.getStatusCode());
    }
+
+    @Test
+    @Order(3)
+    void deveObterPorId() {
+        given()
+                .when()
+                .get("/{id}", 1)
+                .then()
+                .body("id", is(1))
+                .body("nome", is("Amanda Victoria"))
+                .body("idade", is(27))
+                .statusCode(Response.Status.OK.getStatusCode());
+    }
 }
