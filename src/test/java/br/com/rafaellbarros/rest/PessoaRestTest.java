@@ -41,15 +41,17 @@ class PessoaRestTest {
 
         BDDMockito.when(pessoaServiceMock.listarTodas()).thenReturn(singletonList(pessoaEntityMock));
 
+        BDDMockito.when(pessoaServiceMock.obterPorId(ArgumentMatchers.anyLong())).thenReturn(pessoaEntityMock);
+
         BDDMockito.when(pessoaServiceMock.inserir(ArgumentMatchers.any(PessoaEntity.class))).thenReturn(pessoaEntityMock);
 
     }
 
 
     @Test
-    void listarTodasTest() {
+    void deveObterTodasPessoas() {
 
-        final Long exptectedId = PessoaCreator.createValidPessoa().getId();
+        final Long exptectedId = pessoaEntityMock.getId();
         Response response = pessoaRest.listarTodas();
         List<PessoaEntity> pessoaEntities = (List<PessoaEntity>) response.getEntity();
 
@@ -64,13 +66,26 @@ class PessoaRestTest {
     }
 
     @Test
-    void inserirTest() {
+    void deveObterPorId() {
+        final Long expectedId = pessoaEntityMock.getId();
+
+        final Response response = pessoaRest.obterPorId(1L);
+
+        final PessoaEntity pessoa = (PessoaEntity) response.getEntity();
+
+        Assertions.assertThat(pessoa.getId()).isEqualTo(expectedId);
+        Assertions.assertThat(pessoa).isNotNull().isEqualTo(pessoaEntityMock);
+        Assertions.assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
+    }
+
+    @Test
+    void deveIncluirPessoa() {
 
         final Response response = pessoaRest.inserir(PessoaCreator.createPessoaToBeSaved());
 
         final PessoaEntity pessaoSave = (PessoaEntity) response.getEntity();
 
-                Assertions.assertThat(pessaoSave).isNotNull().isEqualTo(pessoaEntityMock);
+        Assertions.assertThat(pessaoSave).isNotNull().isEqualTo(pessoaEntityMock);
         Assertions.assertThat(response.getStatus()).isEqualTo(Response.Status.CREATED.getStatusCode());
 
     }
