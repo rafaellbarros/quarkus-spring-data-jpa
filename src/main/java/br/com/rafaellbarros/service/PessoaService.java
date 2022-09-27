@@ -1,6 +1,7 @@
 package br.com.rafaellbarros.service;
 
-import br.com.rafaellbarros.model.entity.Pessoa;
+import br.com.rafaellbarros.model.dto.PessoaDTO;
+import br.com.rafaellbarros.model.mapper.PessoaMapper;
 import br.com.rafaellbarros.repository.PessoaRepository;
 import lombok.AllArgsConstructor;
 
@@ -20,17 +21,19 @@ public class PessoaService {
 
     private final PessoaRepository pessoaRepository;
 
-    public List<Pessoa> listarTodas() {
-        return pessoaRepository.findAll();
+    private final PessoaMapper mapper;
+
+    public List<PessoaDTO> listarTodas() {
+        return mapper.toDTO(pessoaRepository.findAll());
     }
 
-    public Pessoa obterPorId(final Long id) {
-        return pessoaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada!"));
+    public PessoaDTO obterPorId(final Long id) {
+        return mapper.toDTO(pessoaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada!")));
     }
 
     @Transactional
-    public Pessoa inserir(final Pessoa pessoa) {
-        return pessoaRepository.save(pessoa);
+    public PessoaDTO inserir(final PessoaDTO pessoaDTO) {
+        return mapper.toDTO(pessoaRepository.save(mapper.toEntity(pessoaDTO)));
     }
 }

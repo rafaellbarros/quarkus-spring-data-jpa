@@ -1,7 +1,9 @@
 package br.com.rafaellbarros.rest;
 
+import br.com.rafaellbarros.model.dto.PessoaDTO;
 import br.com.rafaellbarros.model.entity.Pessoa;
 import br.com.rafaellbarros.rest.utils.PessoaCreator;
+import br.com.rafaellbarros.rest.utils.PessoaDTOCreator;
 import br.com.rafaellbarros.service.PessoaService;
 import io.quarkus.test.junit.QuarkusTest;
 import org.assertj.core.api.Assertions;
@@ -33,17 +35,17 @@ class PessoaRestTest {
     @Mock
     PessoaService pessoaServiceMock;
 
-    private final Pessoa pessoaMock = PessoaCreator.createValidPessoa();
+    private final PessoaDTO pessoaDTOMock = PessoaDTOCreator.createValidPessoa();
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        BDDMockito.when(pessoaServiceMock.listarTodas()).thenReturn(singletonList(pessoaMock));
+        BDDMockito.when(pessoaServiceMock.listarTodas()).thenReturn(singletonList(pessoaDTOMock));
 
-        BDDMockito.when(pessoaServiceMock.obterPorId(ArgumentMatchers.anyLong())).thenReturn(pessoaMock);
+        BDDMockito.when(pessoaServiceMock.obterPorId(ArgumentMatchers.anyLong())).thenReturn(pessoaDTOMock);
 
-        BDDMockito.when(pessoaServiceMock.inserir(ArgumentMatchers.any(Pessoa.class))).thenReturn(pessoaMock);
+        BDDMockito.when(pessoaServiceMock.inserir(ArgumentMatchers.any(PessoaDTO.class))).thenReturn(pessoaDTOMock);
 
     }
 
@@ -51,41 +53,41 @@ class PessoaRestTest {
     @Test
     void deveObterTodasPessoas() {
 
-        final Long exptectedId = pessoaMock.getId();
+        final Long exptectedId = pessoaDTOMock.getId();
         Response response = pessoaRest.listarTodas();
-        List<Pessoa> pessoaEntities = (List<Pessoa>) response.getEntity();
+        List<PessoaDTO> pessoas = (List<PessoaDTO>) response.getEntity();
 
-        Assertions.assertThat(pessoaEntities)
+        Assertions.assertThat(pessoas)
                 .isNotNull()
                 .isNotEmpty()
                 .hasSize(1);
 
-        Assertions.assertThat(pessoaEntities.get(0).getId()).isEqualTo(exptectedId);
+        Assertions.assertThat(pessoas.get(0).getId()).isEqualTo(exptectedId);
         Assertions.assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
 
     }
 
     @Test
     void deveObterPorId() {
-        final Long expectedId = pessoaMock.getId();
+        final Long expectedId = pessoaDTOMock.getId();
 
         final Response response = pessoaRest.obterPorId(1L);
 
-        final Pessoa pessoa = (Pessoa) response.getEntity();
+        final PessoaDTO pessoa = (PessoaDTO) response.getEntity();
 
         Assertions.assertThat(pessoa.getId()).isEqualTo(expectedId);
-        Assertions.assertThat(pessoa).isNotNull().isEqualTo(pessoaMock);
+        Assertions.assertThat(pessoa).isNotNull().isEqualTo(pessoaDTOMock);
         Assertions.assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
     }
 
     @Test
     void deveIncluirPessoa() {
 
-        final Response response = pessoaRest.inserir(PessoaCreator.createPessoaToBeSaved());
+        final Response response = pessoaRest.inserir(PessoaDTOCreator.createPessoaToBeSaved());
 
-        final Pessoa pessaoSave = (Pessoa) response.getEntity();
+        final PessoaDTO pessoaDTOSave = (PessoaDTO) response.getEntity();
 
-        Assertions.assertThat(pessaoSave).isNotNull().isEqualTo(pessoaMock);
+        Assertions.assertThat(pessoaDTOSave).isNotNull().isEqualTo(pessoaDTOMock);
         Assertions.assertThat(response.getStatus()).isEqualTo(Response.Status.CREATED.getStatusCode());
 
     }

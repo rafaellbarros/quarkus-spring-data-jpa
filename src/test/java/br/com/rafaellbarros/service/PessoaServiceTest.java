@@ -1,8 +1,11 @@
 package br.com.rafaellbarros.service;
 
+import br.com.rafaellbarros.model.dto.PessoaDTO;
 import br.com.rafaellbarros.model.entity.Pessoa;
+import br.com.rafaellbarros.model.mapper.PessoaMapper;
 import br.com.rafaellbarros.repository.PessoaRepository;
 import br.com.rafaellbarros.rest.utils.PessoaCreator;
+import br.com.rafaellbarros.rest.utils.PessoaDTOCreator;
 import io.quarkus.test.junit.QuarkusTest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,10 +31,15 @@ import static java.util.Collections.singletonList;
 class PessoaServiceTest {
 
     @InjectMocks
-    PessoaService pessoaService;
+    private PessoaService pessoaService;
 
     @Mock
-    PessoaRepository pessoaRepositoryMock;
+    private PessoaRepository pessoaRepositoryMock;
+
+    @Mock
+    private PessoaMapper pessoaMapperMock;
+
+    private final PessoaDTO pessoaDTOMock = PessoaDTOCreator.createValidPessoa();
 
     private final Pessoa pessoaMock = PessoaCreator.createValidPessoa();
 
@@ -39,11 +47,13 @@ class PessoaServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        BDDMockito.when(pessoaRepositoryMock.findAll()).thenReturn(singletonList(pessoaMock));
+        BDDMockito.when(pessoaMapperMock.toDTO(pessoaRepositoryMock.findAll())).thenReturn(singletonList(pessoaDTOMock));
+
+        BDDMockito.when(pessoaMapperMock.toDTO(pessoaMock)).thenReturn(pessoaDTOMock);
 
         BDDMockito.when(pessoaRepositoryMock.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(pessoaMock));
 
-        BDDMockito.when(pessoaRepositoryMock.save(ArgumentMatchers.any(Pessoa.class))).thenReturn(pessoaMock);
+        BDDMockito.when(pessoaMapperMock.toDTO(pessoaRepositoryMock.save(ArgumentMatchers.any(Pessoa.class)))).thenReturn(pessoaDTOMock);
 
     }
 
@@ -51,8 +61,8 @@ class PessoaServiceTest {
     @Test
     void deveObterTodasPessoas() {
 
-        final Long exptectedId = PessoaCreator.createValidPessoa().getId();
-        final List<Pessoa> pessoaEntities = pessoaService.listarTodas();
+        final Long exptectedId = PessoaDTOCreator.createValidPessoa().getId();
+        final List<PessoaDTO> pessoaEntities = pessoaService.listarTodas();
 
         Assertions.assertThat(pessoaEntities)
                 .isNotNull()
@@ -65,9 +75,9 @@ class PessoaServiceTest {
     @Test
     void deveObterPorId() {
 
-        final Long expectedId = pessoaMock.getId();
+        final Long expectedId = pessoaDTOMock.getId();
 
-        final Pessoa pessoa = pessoaService.obterPorId(1L);
+        final PessoaDTO pessoa = pessoaService.obterPorId(1L);
 
         Assertions.assertThat(pessoa).isNotNull();
 
@@ -78,9 +88,9 @@ class PessoaServiceTest {
     @Test
     void deveIncluirPessoa() {
 
-        final Pessoa pessaoSave = pessoaService.inserir(PessoaCreator.createPessoaToBeSaved());
+        final PessoaDTO pessoaDTOSave = pessoaService.inserir(PessoaDTOCreator.createPessoaToBeSaved());
 
-        Assertions.assertThat(pessaoSave).isNotNull().isEqualTo(pessoaMock);
+        Assertions.assertThat(pessoaDTOSave).isNotNull().isEqualTo(pessoaDTOMock);
 
     }
 

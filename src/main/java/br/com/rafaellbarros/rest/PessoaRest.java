@@ -1,5 +1,6 @@
 package br.com.rafaellbarros.rest;
 
+import br.com.rafaellbarros.model.dto.PessoaDTO;
 import br.com.rafaellbarros.model.entity.Pessoa;
 import br.com.rafaellbarros.service.PessoaService;
 import lombok.RequiredArgsConstructor;
@@ -39,9 +40,9 @@ public class PessoaRest {
    }
 
    @POST
-   public Response inserir(final Pessoa pessoa) {
-        final Pessoa pessoaSave = pessoaService.inserir(pessoa);
-        return Response.status(Response.Status.CREATED).entity(pessoaSave).build();
+   public Response inserir(final PessoaDTO pessoaDTO) {
+       final PessoaDTO dtoSave = pessoaService.inserir(pessoaDTO);
+       return Response.status(Response.Status.CREATED).entity(dtoSave).build();
    }
 
 }
