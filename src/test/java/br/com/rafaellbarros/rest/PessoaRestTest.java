@@ -1,6 +1,6 @@
 package br.com.rafaellbarros.rest;
 
-import br.com.rafaellbarros.model.entity.PessoaEntity;
+import br.com.rafaellbarros.model.entity.Pessoa;
 import br.com.rafaellbarros.rest.utils.PessoaCreator;
 import br.com.rafaellbarros.service.PessoaService;
 import io.quarkus.test.junit.QuarkusTest;
@@ -33,17 +33,17 @@ class PessoaRestTest {
     @Mock
     PessoaService pessoaServiceMock;
 
-    private final PessoaEntity pessoaEntityMock = PessoaCreator.createValidPessoa();
+    private final Pessoa pessoaMock = PessoaCreator.createValidPessoa();
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        BDDMockito.when(pessoaServiceMock.listarTodas()).thenReturn(singletonList(pessoaEntityMock));
+        BDDMockito.when(pessoaServiceMock.listarTodas()).thenReturn(singletonList(pessoaMock));
 
-        BDDMockito.when(pessoaServiceMock.obterPorId(ArgumentMatchers.anyLong())).thenReturn(pessoaEntityMock);
+        BDDMockito.when(pessoaServiceMock.obterPorId(ArgumentMatchers.anyLong())).thenReturn(pessoaMock);
 
-        BDDMockito.when(pessoaServiceMock.inserir(ArgumentMatchers.any(PessoaEntity.class))).thenReturn(pessoaEntityMock);
+        BDDMockito.when(pessoaServiceMock.inserir(ArgumentMatchers.any(Pessoa.class))).thenReturn(pessoaMock);
 
     }
 
@@ -51,9 +51,9 @@ class PessoaRestTest {
     @Test
     void deveObterTodasPessoas() {
 
-        final Long exptectedId = pessoaEntityMock.getId();
+        final Long exptectedId = pessoaMock.getId();
         Response response = pessoaRest.listarTodas();
-        List<PessoaEntity> pessoaEntities = (List<PessoaEntity>) response.getEntity();
+        List<Pessoa> pessoaEntities = (List<Pessoa>) response.getEntity();
 
         Assertions.assertThat(pessoaEntities)
                 .isNotNull()
@@ -67,14 +67,14 @@ class PessoaRestTest {
 
     @Test
     void deveObterPorId() {
-        final Long expectedId = pessoaEntityMock.getId();
+        final Long expectedId = pessoaMock.getId();
 
         final Response response = pessoaRest.obterPorId(1L);
 
-        final PessoaEntity pessoa = (PessoaEntity) response.getEntity();
+        final Pessoa pessoa = (Pessoa) response.getEntity();
 
         Assertions.assertThat(pessoa.getId()).isEqualTo(expectedId);
-        Assertions.assertThat(pessoa).isNotNull().isEqualTo(pessoaEntityMock);
+        Assertions.assertThat(pessoa).isNotNull().isEqualTo(pessoaMock);
         Assertions.assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
     }
 
@@ -83,9 +83,9 @@ class PessoaRestTest {
 
         final Response response = pessoaRest.inserir(PessoaCreator.createPessoaToBeSaved());
 
-        final PessoaEntity pessaoSave = (PessoaEntity) response.getEntity();
+        final Pessoa pessaoSave = (Pessoa) response.getEntity();
 
-        Assertions.assertThat(pessaoSave).isNotNull().isEqualTo(pessoaEntityMock);
+        Assertions.assertThat(pessaoSave).isNotNull().isEqualTo(pessoaMock);
         Assertions.assertThat(response.getStatus()).isEqualTo(Response.Status.CREATED.getStatusCode());
 
     }

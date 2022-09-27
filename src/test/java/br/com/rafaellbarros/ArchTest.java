@@ -125,16 +125,19 @@ public class ArchTest {
 
    /* entitiesMustResideInEntityPackage  */
    // TODO: lançar a versão 2.0 igual do cleanarc
-
-
    @Test
    void entitiesDevemEstarPresenteNoPacoteModelEntity() {
       classes().that().areAnnotatedWith(Entity.class).should().resideInAPackage("..model.entity..")
-              .andShould().haveSimpleNameEndingWith("Entity")
               .as("Etities devem estar em um pacote '..model.entity..'")
               .check(importedClasses);
    }
 
+   @Test
+   void dtosDevemEstarPresenteNoPacoteModelDTO() {
+      classes().that().haveSimpleNameEndingWith("DTO").should().resideInAPackage("..model.dto..")
+              .as("DTOs devem estar em um pacote '..model.dto..'")
+              .check(importedClasses);
+   }
 
    /* enumsMustResideInEnumsPackage  */
    /*

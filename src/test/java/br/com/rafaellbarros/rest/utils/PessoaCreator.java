@@ -1,6 +1,6 @@
 package br.com.rafaellbarros.rest.utils;
 
-import br.com.rafaellbarros.model.entity.PessoaEntity;
+import br.com.rafaellbarros.model.entity.Pessoa;
 
 /**
  * created by:
@@ -10,15 +10,15 @@ import br.com.rafaellbarros.model.entity.PessoaEntity;
 
 public class PessoaCreator {
 
-   public static PessoaEntity createPessoaToBeSaved() {
-      return PessoaEntity.builder()
+   public static Pessoa createPessoaToBeSaved() {
+      return Pessoa.builder()
             .nome("Amanda Victoria")
             .idade(27L)
             .build();
    }
 
-   public static PessoaEntity createValidPessoa() {
-      return PessoaEntity.builder()
+   public static Pessoa createValidPessoa() {
+      return Pessoa.builder()
               .id(1L)
               .nome("Rafael Barros")
               .idade(33L)

@@ -22,7 +22,7 @@ import javax.persistence.Id;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class PessoaEntity {
+public class Pessoa {
 
     @Id
     @GeneratedValue

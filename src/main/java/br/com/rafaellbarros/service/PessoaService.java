@@ -1,6 +1,6 @@
 package br.com.rafaellbarros.service;
 
-import br.com.rafaellbarros.model.entity.PessoaEntity;
+import br.com.rafaellbarros.model.entity.Pessoa;
 import br.com.rafaellbarros.repository.PessoaRepository;
 import lombok.AllArgsConstructor;
 
@@ -20,17 +20,17 @@ public class PessoaService {
 
     private final PessoaRepository pessoaRepository;
 
-    public List<PessoaEntity> listarTodas() {
+    public List<Pessoa> listarTodas() {
         return pessoaRepository.findAll();
     }
 
-    public PessoaEntity obterPorId(final Long id) {
+    public Pessoa obterPorId(final Long id) {
         return pessoaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pessoa não encontrada!"));
     }
 
     @Transactional
-    public PessoaEntity inserir(final PessoaEntity pessoaEntity) {
-        return pessoaRepository.save(pessoaEntity);
+    public Pessoa inserir(final Pessoa pessoa) {
+        return pessoaRepository.save(pessoa);
     }
 }
